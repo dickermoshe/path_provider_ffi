@@ -1,0 +1,23 @@
+name: NSFileManagerLib
+description: "Bindings for NSFileManager"
+language: objc
+output: "lib/src/platforms/foundation/bindings.dart"
+headers:
+  entry-points:
+    - "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.4.sdk/System/Library/Frameworks/Foundation.framework/Headers/NSFileManager.h"
+    - "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.4.sdk/System/Library/Frameworks/Foundation.framework/Headers/NSBundle.h"
+functions:
+  include:
+    - "NSSearchPathForDirectoriesInDomains"
+enums:
+  include:
+    - "NSFileManagerSearchPathDirectory"
+    - "NSFileManagerSearchPathDomainMask"
+
+objc-interfaces:
+  include:
+    - "NSURL"
+    - "NSFileManager"
+    - "NSBundle"
+
+exclude-all-by-default: true

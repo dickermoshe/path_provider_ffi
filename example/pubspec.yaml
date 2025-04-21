@@ -1,0 +1,28 @@
+name: path_provider_ffi_example
+description: "Demonstrates how to use the path_provider_ffi plugin."
+publish_to: none
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.7.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  path_provider_ffi:
+    path: ../
+  cupertino_icons: ^1.0.8
+  path_provider: ^2.1.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  integration_test:
+    sdk: flutter
+  path: ^1.9.1
+
+flutter:
+  uses-material-design: true
