@@ -1,9 +1,5 @@
 name: "Flutter Setup and Dependencies"
 description: "Sets up Flutter and installs dependencies."
-inputs:
-  android_api_level:
-    description: "Android API level to use for the emulator."
-    required: true
 runs:
   using: "composite"
   steps:

@@ -7,81 +7,13 @@ on:
   pull_request:
 
 jobs:
-  # build:
-  #   strategy:
-  #     matrix:
-  #       os: [ubuntu-latest, windows-latest, macos-latest]
-
-  #   runs-on: ${{ matrix.os }}
-
-  #   steps:
-  #     - name: Clone repository
-  #       uses: actions/checkout@v4
-  #     - name: Setup
-  #       uses: ./.github/actions/flutter-setup
-
-  #     - name: Run Regular Tests
-  #       run: |
-  #         flutter test
-
-  # test_linux:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-
-  #   steps:
-  #     - name: Clone repository
-  #       uses: actions/checkout@v4
-  #     - name: Setup
-  #       uses: ./.github/actions/flutter-setup
-
-  #     - name: Run Integration Tests
-  #       working-directory: example
-  #       shell: bash
-  #       run: |
-  #         xvfb-run flutter test ./integration_test/original_package_test.dart -d linux;
-  #         xvfb-run flutter test ./integration_test/path_provider_linux_test.dart -d linux;
-
-  # test_windows:
-  #   # needs: build
-  #   runs-on: windows-latest
-
-  #   steps:
-  #     - name: Clone repository
-  #       uses: actions/checkout@v4
-  #     - name: Setup
-  #       uses: ./.github/actions/flutter-setup
-
-  #     - name: Run Integration Tests
-  #       working-directory: example
-  #       shell: bash
-  #       run: |
-  #         flutter test integration_test/original_package_test.dart -d windows;
-  #         flutter test integration_test/path_provider_windows_test.dart -d windows;
-
-  # text_macos:
-  #   needs: build
-  #   runs-on: macos-latest
-
-  #   steps:
-  #     - name: Clone repository
-  #       uses: actions/checkout@v4
-  #     - name: Setup
-  #       uses: ./.github/actions/flutter-setup
-
-  #     - name: Run Integration Tests
-  #       working-directory: example
-  #       shell: bash
-  #       run: |
-  #         flutter test ./integration_test/original_package_test.dart -d macos;
-  #         flutter test ./integration_test/path_provider_foundation_test.dart -d macos;
-
-  test_android:
-    # needs: test_linux
-    runs-on: ubuntu-latest
-
+  build:
     strategy:
       matrix:
-        api-level: [35]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        android-api-level: [21, 35]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Clone repository
@@ -89,118 +21,30 @@ jobs:
       - name: Setup
         uses: ./.github/actions/flutter-setup
 
-      - name: Gradle cache
-        uses: gradle/actions/setup-gradle@v3
+      - name: Run Regular Tests
+        run: |
+          flutter test
 
-      - name: AVD cache
-        uses: actions/cache@v4
-        id: avd-cache
+      - name: Run Windows Integration Tests
+        if: runner.os == 'Windows'
+        run: |
+          flutter test integration_test/original_package_test.dart -d windows;
+          flutter test integration_test/path_provider_windows_test.dart -d windows;
+      - name: Run Linux Integration Tests
+        if: runner.os == 'Linux'
+        run: |
+          xvfb-run flutter test ./integration_test/original_package_test.dart -d linux;
+          xvfb-run flutter test ./integration_test/path_provider_linux_test.dart -d linux;
+      - name: Run MacOS Integration Tests
+        if: runner.os == 'macOS'
+        run: |
+          flutter test ./integration_test/original_package_test.dart -d macos;
+          flutter test ./integration_test/path_provider_foundation_test.dart -d macos;
+      - name: Run IOS Integration Tests
+        if: runner.os == 'macOS'
+        uses: ./.github/actions/ios-test
+      - name: Run Android Integration Tests
+        if: runner.os == 'Linux'
+        uses: ./.github/actions/android-test
         with:
-          path: |
-            ~/.android/avd/*
-            ~/.android/adb*
-          key: avd-${{ matrix.api-level }}
-
-      - name: Generate AVD snapshot for caching.
-        if: steps.avd-cache.outputs.cache-hit != 'true'
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: ${{ matrix.api-level }}
-          cores: 3
-          working-directory: example
-          target: google_apis
-          arch: x86_64
-          force-avd-creation: false
-          disable-animations: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          script: echo "Generated AVD snapshot for caching."
-
-      - name: Run Integration Tests
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: ${{ matrix.api-level }}
-          cores: 3
-          working-directory: example
-          target: google_apis
-          arch: x86_64
-          force-avd-creation: false
-          disable-animations: false
-          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          script: |
-            flutter test integration_test/original_package_test.dart;
-            flutter test integration_test/path_provider_android_test.dart;
-
-  #   steps:
-  #     - name: "Setup"
-  #       uses: ./.github/actions/flutter-setup
-
-  #     - name: Set up Flutter
-  #       uses: subosito/flutter-action@v2
-
-  #     - name: Install Linux Dependencies
-  #       if: runner.os == 'Linux'
-  #       run: |
-  #         sudo apt-get update -y
-  #         sudo apt-get install -y ninja-build libgtk-3-dev xvfb
-
-  #     - name: Install Dependencies
-  #       run: |
-  #         flutter pub get
-
-  #     - name: Print Device Info
-  #       run: |
-  #         flutter devices
-
-  #     - name: Run Main Tests
-  #       run: |
-  #         flutter test
-
-  #     - name: Run Integration Tests
-  #       working-directory: example
-  #       shell: bash
-  #       run: |
-  #         if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-  #           flutter test .\integration_test\original_package_test.dart -d windows;
-  #           flutter test .\integration_test\path_provider_windows_test.dart -d windows;
-  #         elif [[ "${{ matrix.os }}" == "Linux" ]]; then
-  #           xvfb-run flutter test ./integration_test/original_package_test.dart -d linux;
-  #           xvfb-run flutter test ./integration_test/path_provider_linux_test.dart -d linux;
-  #         fi
-
-  # test_macos_and_ios:
-  #   runs-on: macos-latest
-
-  #   steps:
-  #     - name: Clone repository
-  #       uses: actions/checkout@v4
-
-  #     - name: Set up Flutter
-  #       uses: subosito/flutter-action@v2
-
-  #     - name: Install Simulator
-  #       id: simulator
-  #       uses: futureware-tech/simulator-action@v4
-  #       with:
-  #         model: "iPhone 16"
-  #         wait_for_boot: true
-
-  #     - name: Install Dependencies
-  #       run: |
-  #         flutter pub get
-
-  #     - name: Print Device Info
-  #       run: |
-  #         flutter devices
-
-  #     - name: Run Main Tests
-  #       run: |
-  #         flutter test
-
-  #     - name: Run Integration Tests
-  #       working-directory: example
-  #       shell: bash
-  #       run: |
-  #         flutter test ./integration_test/original_package_test.dart -d macos;
-  #         flutter test ./integration_test/path_provider_foundation_test.dart -d macos;
-  #         flutter test ./integration_test/original_package_test.dart -d ${{ steps.simulator.outputs.udid }};
-  #         flutter test ./integration_test/path_provider_foundation_test.dart -d ${{ steps.simulator.outputs.udid }};
+          api-level: 30
