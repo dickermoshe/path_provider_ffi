@@ -55,8 +55,8 @@ jobs:
         working-directory: example
         shell: bash
         run: |
-          flutter test \integration_test\original_package_test.dart -d windows;
-          flutter test \integration_test\path_provider_windows_test.dart -d windows;
+          flutter test integration_test/original_package_test.dart -d windows;
+          flutter test integration_test/path_provider_windows_test.dart -d windows;
 
   # text_macos:
   #   needs: build
@@ -125,7 +125,7 @@ jobs:
           arch: x86_64
           force-avd-creation: false
           disable-animations: false
-          script: .github/scripts/android-integration-test.sh
+          script: ./.github/workflows/scripts/integration-test.sh
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
 
   #   - name: Gradle cache
