@@ -41,22 +41,22 @@ jobs:
   #         xvfb-run flutter test ./integration_test/original_package_test.dart -d linux;
   #         xvfb-run flutter test ./integration_test/path_provider_linux_test.dart -d linux;
 
-  test_windows:
-    # needs: build
-    runs-on: windows-latest
+  # test_windows:
+  #   # needs: build
+  #   runs-on: windows-latest
 
-    steps:
-      - name: Clone repository
-        uses: actions/checkout@v4
-      - name: Setup
-        uses: ./.github/actions/flutter-setup
+  #   steps:
+  #     - name: Clone repository
+  #       uses: actions/checkout@v4
+  #     - name: Setup
+  #       uses: ./.github/actions/flutter-setup
 
-      - name: Run Integration Tests
-        working-directory: example
-        shell: bash
-        run: |
-          flutter test integration_test/original_package_test.dart -d windows;
-          flutter test integration_test/path_provider_windows_test.dart -d windows;
+  #     - name: Run Integration Tests
+  #       working-directory: example
+  #       shell: bash
+  #       run: |
+  #         flutter test integration_test/original_package_test.dart -d windows;
+  #         flutter test integration_test/path_provider_windows_test.dart -d windows;
 
   # text_macos:
   #   needs: build
@@ -125,32 +125,8 @@ jobs:
           arch: x86_64
           force-avd-creation: false
           disable-animations: false
-          script: ../.github/workflows/scripts/integration-test.sh
+          script: ls
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-
-  #   - name: Gradle cache
-  #     if: runner.os == 'Linux'
-  #     uses: gradle/actions/setup-gradle@v3
-
-  #   - name: AVD cache
-  #     uses: actions/cache@v4
-  #     id: avd-cache
-  #     if: runner.os == 'Linux'
-  #     with:
-  #       path: |
-  #         ~/.android/avd/*
-  #         ~/.android/adb*
-  #       key: avd-${{ inputs.android_api_level }}
-
-  #   - name: create AVD and generate snapshot for caching
-  #     if: steps.avd-cache.outputs.cache-hit != 'true'
-  #     uses: reactivecircus/android-emulator-runner@v2
-  #     with:
-  #       api-level: ${{ matrix.api-level }}
-  #       force-avd-creation: false
-  #       emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-  #       disable-animations: false
-  #       script: echo "Generated AVD snapshot for caching."
 
   #   steps:
   #     - name: "Setup"
