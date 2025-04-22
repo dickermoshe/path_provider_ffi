@@ -104,7 +104,7 @@ jobs:
       - name: Generate AVD snapshot for caching.
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
-        with: &android-options
+        with:
           api-level: ${{ matrix.api-level }}
           cores: 3
           working-directory: example
@@ -118,7 +118,13 @@ jobs:
       - name: Run Integration Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          <<: *android-options
+          api-level: ${{ matrix.api-level }}
+          cores: 3
+          working-directory: example
+          target: google_apis
+          arch: x86_64
+          force-avd-creation: false
+          disable-animations: false
           script: ./.github/scripts/android-integration-test.sh
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
 
