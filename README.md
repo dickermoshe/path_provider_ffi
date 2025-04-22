@@ -1,0 +1,1 @@
+add android plugin to ensure only good versions

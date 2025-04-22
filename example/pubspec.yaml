@@ -1,11 +1,11 @@
 name: path_provider_ffi_example
-description: "Demonstrates how to use the path_provider_ffi plugin."
+description: "Test app for path_provider_ffi"
 publish_to: none
 
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.7.2
+  sdk: ^3.7.0
 
 dependencies:
   flutter:

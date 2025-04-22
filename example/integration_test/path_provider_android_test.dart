@@ -1,4 +1,3 @@
-@TestOn('ios || mac-os')
 library;
 // Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -10,6 +9,9 @@ import 'package:integration_test/integration_test.dart';
 import 'package:path_provider_ffi/path_provider_ffi.dart';
 
 void main() {
+  if (!Platform.isAndroid) {
+    return;
+  }
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('getTemporaryDirectory', (WidgetTester tester) async {
@@ -21,15 +23,7 @@ void main() {
   testWidgets('getApplicationDocumentsDirectory', (WidgetTester tester) async {
     final PathProvider provider = PathProvider.instance;
     final String? result = provider.getApplicationDocumentsPath();
-    if (Platform.isMacOS) {
-      // _verifySampleFile causes hangs in driver when sandboxing is disabled
-      // because the path changes from an app specific directory to
-      // ~/Documents, which requires additional permissions to access on macOS.
-      // Instead, validate that a non-empty path was returned.
-      expect(result, isNotEmpty);
-    } else {
-      _verifySampleFile(result, 'applicationDocuments');
-    }
+    _verifySampleFile(result, 'applicationDocuments');
   });
 
   testWidgets('getApplicationSupportDirectory', (WidgetTester tester) async {
@@ -46,34 +40,58 @@ void main() {
 
   testWidgets('getLibraryDirectory', (WidgetTester tester) async {
     final PathProvider provider = PathProvider.instance;
-    final String? result = provider.getLibraryPath();
-    _verifySampleFile(result, 'library');
+    expect(
+      () => provider.getLibraryPath(),
+      throwsA(isInstanceOf<UnsupportedError>()),
+    );
   });
 
-  testWidgets('getDownloadsDirectory', (WidgetTester tester) async {
+  testWidgets('getExternalStorageDirectory', (WidgetTester tester) async {
     final PathProvider provider = PathProvider.instance;
-    final String? result = provider.getDownloadsPath();
-    // _verifySampleFile causes hangs in driver for some reason, so just
-    // validate that a non-empty path was returned.
-    expect(result, isNotEmpty);
+    final String? result = provider.getExternalStoragePath();
+    _verifySampleFile(result, 'externalStorage');
   });
 
-  // testWidgets('getContainerDirectory', (WidgetTester tester) async {
-  //   if (Platform.isIOS) {
-  //     final PathProviderFoundation provider = PathProviderFoundation();
+  testWidgets('getExternalCacheDirectories', (WidgetTester tester) async {
+    final PathProvider provider = PathProvider.instance;
+    final List<String>? directories = provider.getExternalCachePaths();
+    expect(directories, isNotNull);
+    for (final String result in directories!) {
+      _verifySampleFile(result, 'externalCache');
+    }
+  });
 
-  //     final String? result = provider.getContainerPath(
-  //       'group.flutter.appGroupTest',
-  //     );
-  //     _verifySampleFile(result, 'appGroup');
-  //   }
-  // });
+  final List<StorageDirectory?> allDirs = <StorageDirectory?>[
+    null,
+    StorageDirectory.music,
+    StorageDirectory.podcasts,
+    StorageDirectory.ringtones,
+    StorageDirectory.alarms,
+    StorageDirectory.notifications,
+    StorageDirectory.pictures,
+    StorageDirectory.movies,
+  ];
+
+  for (final StorageDirectory? type in allDirs) {
+    testWidgets('getExternalStorageDirectories (type: $type)', (
+      WidgetTester tester,
+    ) async {
+      final PathProvider provider = PathProvider.instance;
+
+      final List<String>? directories = provider.getExternalStoragePaths(
+        type: type,
+      );
+      expect(directories, isNotNull);
+      expect(directories, isNotEmpty);
+      for (final String result in directories!) {
+        _verifySampleFile(result, '$type');
+      }
+    });
+  }
 }
 
 /// Verify a file called [name] in [directoryPath] by recreating it with test
 /// contents when necessary.
-///
-/// If [createDirectory] is true, the directory will be created if missing.
 void _verifySampleFile(String? directoryPath, String name) {
   expect(directoryPath, isNotNull);
   if (directoryPath == null) {
@@ -89,6 +107,11 @@ void _verifySampleFile(String? directoryPath, String name) {
 
   file.writeAsStringSync('Hello world!');
   expect(file.readAsStringSync(), 'Hello world!');
-  expect(directory.listSync(), isNotEmpty);
+  // This check intentionally avoids using Directory.listSync due to
+  // https://github.com/dart-lang/sdk/issues/54287.
+  expect(
+    Process.runSync('ls', <String>[directory.path]).stdout,
+    contains(name),
+  );
   file.deleteSync();
 }
