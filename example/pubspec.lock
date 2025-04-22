@@ -224,7 +224,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "2.1.5"
+    version: "2.1.5-dev1"
   path_provider_foundation:
     dependency: transitive
     description:
