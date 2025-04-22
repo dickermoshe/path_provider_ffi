@@ -26,24 +26,36 @@ jobs:
           flutter test
 
       - name: Run Windows Integration Tests
+        shell: bash
+        working-directory: example
         if: runner.os == 'Windows'
         run: |
           flutter test integration_test/original_package_test.dart -d windows;
           flutter test integration_test/path_provider_windows_test.dart -d windows;
+
       - name: Run Linux Integration Tests
+        shell: bash
+        working-directory: example
         if: runner.os == 'Linux'
         run: |
           xvfb-run flutter test ./integration_test/original_package_test.dart -d linux;
           xvfb-run flutter test ./integration_test/path_provider_linux_test.dart -d linux;
+
       - name: Run MacOS Integration Tests
+        shell: bash
+        working-directory: example
         if: runner.os == 'macOS'
         run: |
           flutter test ./integration_test/original_package_test.dart -d macos;
           flutter test ./integration_test/path_provider_foundation_test.dart -d macos;
+
       - name: Run IOS Integration Tests
+
         if: runner.os == 'macOS'
         uses: ./.github/actions/ios-test
+
       - name: Run Android Integration Tests
+
         if: runner.os == 'Linux'
         uses: ./.github/actions/android-test
         with:
