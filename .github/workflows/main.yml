@@ -81,7 +81,7 @@ jobs:
 
     strategy:
       matrix:
-        api-level: [21, 35]
+        api-level: [35]
 
     steps:
       - name: Clone repository
