@@ -14,7 +14,6 @@ on:
 
 jobs:
   test_windows:
-    if: false
     name: Test Windows
     runs-on: windows-latest
     steps:
