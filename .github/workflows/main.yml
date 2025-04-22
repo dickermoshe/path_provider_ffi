@@ -15,6 +15,8 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
       - name: Setup
         uses: ./.github/actions/flutter-setup
 
@@ -27,6 +29,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
       - name: Setup
         uses: ./.github/actions/flutter-setup
 
@@ -42,6 +46,8 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
       - name: Setup
         uses: ./.github/actions/flutter-setup
 
@@ -57,6 +63,8 @@ jobs:
     runs-on: macos-latest
 
     steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
       - name: Setup
         uses: ./.github/actions/flutter-setup
 
@@ -76,6 +84,8 @@ jobs:
         api-level: [21, 35]
 
     steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
       - name: Setup
         uses: ./.github/actions/flutter-setup
 

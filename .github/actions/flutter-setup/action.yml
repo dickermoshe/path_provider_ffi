@@ -7,9 +7,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Clone repository
-      uses: actions/checkout@v4
-
     - name: Install Linux Dependencies
       if: runner.os == 'Linux'
       shell: bash
