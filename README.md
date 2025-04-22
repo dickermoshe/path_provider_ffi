@@ -43,3 +43,5 @@ Directories support by platform:
 ## Testing
 
 `path_provider_ffi` uses the same tests as the original `path_provider` plugin as well as comparison tests to ensure that the results are the same. The tests are run on all platforms using the `flutter_test` package.
+
+Tests are ran on [RunsOn](https://runs-on.com/), an awesome open source github runner alternative.

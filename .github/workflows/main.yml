@@ -1,63 +1,114 @@
-name: Test Action
+# The name of this workflow as it appears in the Actions tab of your repository.
+name: CI - Internal PRs Auto-Run
 
 on:
-  push:
+  pull_request:
     branches:
       - main
-  pull_request:
+    paths-ignore:
+      - "docs/**"
+      - "*.md"
 
 jobs:
-  build:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        android-api-level: [21, 35]
-
-    runs-on: ${{ matrix.os }}
-
+  test_windows:
+    name: Test Windows
+    runs-on: windows-latest
     steps:
       - name: Clone repository
         uses: actions/checkout@v4
+
       - name: Setup
         uses: ./.github/actions/flutter-setup
-
-      - name: Run Regular Tests
-        run: |
-          flutter test
 
       - name: Run Windows Integration Tests
         shell: bash
         working-directory: example
-        if: runner.os == 'Windows'
         run: |
           flutter test integration_test/original_package_test.dart -d windows;
           flutter test integration_test/path_provider_windows_test.dart -d windows;
 
-      - name: Run Linux Integration Tests
-        shell: bash
-        working-directory: example
-        if: runner.os == 'Linux'
-        run: |
-          xvfb-run flutter test ./integration_test/original_package_test.dart -d linux;
-          xvfb-run flutter test ./integration_test/path_provider_linux_test.dart -d linux;
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       os: [4cpu-linux-x64t, windows-latest, macos-latest]
 
-      - name: Run MacOS Integration Tests
-        shell: bash
-        working-directory: example
-        if: runner.os == 'macOS'
-        run: |
-          flutter test ./integration_test/original_package_test.dart -d macos;
-          flutter test ./integration_test/path_provider_foundation_test.dart -d macos;
+  #   runs-on: runs-on=${{ github.run_id }}
 
-      - name: Run IOS Integration Tests
+  #   steps:
+  #     - name: Clone repository
+  #       uses: actions/checkout@v4
 
-        if: runner.os == 'macOS'
-        uses: ./.github/actions/ios-test
+  #     - name: Run Regular Tests
+  #       run: |
+  #         flutter test
+  # request-approval:
+  #   name: Request Approval for External PR
+  #   runs-on: ubuntu-latest
+  #   if: github.event_name == 'pull_request_target'
+  #   permissions:
+  #     pull-requests: write
+  #   steps:
+  #     - name: Request Approval
+  #       uses: hmarr/auto-approve-action@v4 # Or the latest version
+  #       with:
+  #         github-token: "${{ secrets.GITHUB_TOKEN }}"
+  #         approvers: your_github_username, another_maintainer  # Replace with your actual usernames
+  #         require_review: true # Ensure at least one approval
+  #         skip_keywords: 'wip, do not merge'
+  #         number_of_approvals: 1
 
-      - name: Run Android Integration Tests
+# jobs:
+#   build:
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         os: [ubuntu-latest, windows-latest, macos-latest]
+#         android-api-level: [21, 35]
 
-        if: runner.os == 'Linux'
-        uses: ./.github/actions/android-test
-        with:
-          api-level: 30
+#     runs-on: ${{ matrix.os }}
+
+#     steps:
+#       - name: Clone repository
+#         uses: actions/checkout@v4
+#       - name: Setup
+#         uses: ./.github/actions/flutter-setup
+
+#       - name: Run Regular Tests
+#         run: |
+#           flutter test
+
+#       - name: Run Windows Integration Tests
+#         shell: bash
+#         working-directory: example
+#         if: runner.os == 'Windows'
+#         run: |
+#           flutter test integration_test/original_package_test.dart -d windows;
+#           flutter test integration_test/path_provider_windows_test.dart -d windows;
+
+#       - name: Run Linux Integration Tests
+#         shell: bash
+#         working-directory: example
+#         if: runner.os == 'Linux'
+#         run: |
+#           xvfb-run flutter test ./integration_test/original_package_test.dart -d linux;
+#           xvfb-run flutter test ./integration_test/path_provider_linux_test.dart -d linux;
+
+#       - name: Run MacOS Integration Tests
+#         shell: bash
+#         working-directory: example
+#         if: runner.os == 'macOS'
+#         run: |
+#           flutter test ./integration_test/original_package_test.dart -d macos;
+#           flutter test ./integration_test/path_provider_foundation_test.dart -d macos;
+
+#       - name: Run IOS Integration Tests
+
+#         if: runner.os == 'macOS'
+#         uses: ./.github/actions/ios-test
+
+#       - name: Run Android Integration Tests
+
+#         if: runner.os == 'Linux'
+#         uses: ./.github/actions/android-test
+#         with:
+#           api-level: 30
