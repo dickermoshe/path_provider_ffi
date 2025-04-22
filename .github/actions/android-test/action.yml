@@ -19,7 +19,7 @@ runs:
       if: steps.avd-cache.outputs.cache-hit != 'true'
       uses: reactivecircus/android-emulator-runner@v2
       with:
-        api-level: 21
+        api-level: 35
         cores: 3
         working-directory: example
         target: google_apis
@@ -32,7 +32,7 @@ runs:
     - name: Run Integration Tests on Android API Level 21
       uses: reactivecircus/android-emulator-runner@v2
       with:
-        api-level: 21
+        api-level: 35
         cores: 3
         working-directory: example
         target: google_apis

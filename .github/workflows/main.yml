@@ -106,8 +106,4 @@ jobs:
         uses: ./.github/actions/flutter-setup
 
       - name: Run Android Integration Tests
-        shell: bash
-        working-directory: example
-        run: |
-          flutter test ./integration_test/original_package_test.dart -d android;
-          flutter test ./integration_test/path_provider_android_test.dart -d android;
+        uses: ./.github/actions/android-test
