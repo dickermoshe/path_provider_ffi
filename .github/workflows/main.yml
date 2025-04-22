@@ -17,6 +17,20 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/flutter-setup
+
+      - name: Run Tests
+        shell: bash
+        run: flutter test
+
   test_windows:
     name: Test Windows
     runs-on: windows-latest
@@ -38,8 +52,6 @@ jobs:
     name: Test Linux
     runs-on: ubuntu-latest
     steps:
-      - name: Setup RunsOn Cache
-        uses: runs-on/action@v1
       - name: Clone repository
         uses: actions/checkout@v4
 
@@ -52,6 +64,35 @@ jobs:
         run: |
           xvfb-run flutter test ./integration_test/original_package_test.dart -d linux;
           xvfb-run flutter test ./integration_test/path_provider_linux_test.dart -d linux;
+  test_macos:
+    name: Test MacOS
+    runs-on: macos-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/flutter-setup
+
+      - name: Run MacOS Integration Tests
+        shell: bash
+        working-directory: example
+        run: |
+          flutter test ./integration_test/original_package_test.dart -d macos;
+          flutter test ./integration_test/path_provider_foundation_test.dart -d macos;
+
+  test_ios:
+    name: Test IOS
+    runs-on: macos-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/flutter-setup
+
+      - name: Run IOS Integration Tests
+        uses: ./.github/actions/ios-test
 
   #   strategy:
   #     fail-fast: false
@@ -82,7 +123,6 @@ jobs:
   #         require_review: true # Ensure at least one approval
   #         skip_keywords: 'wip, do not merge'
   #         number_of_approvals: 1
-
 # jobs:
 #   build:
 #     strategy:
