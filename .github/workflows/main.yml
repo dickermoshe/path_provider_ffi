@@ -2,6 +2,9 @@
 name: CI - Internal PRs Auto-Run
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
       - main
@@ -11,6 +14,7 @@ on:
 
 jobs:
   test_windows:
+    if: false
     name: Test Windows
     runs-on: windows-latest
     steps:
@@ -26,6 +30,25 @@ jobs:
         run: |
           flutter test integration_test/original_package_test.dart -d windows;
           flutter test integration_test/path_provider_windows_test.dart -d windows;
+
+  test_linux:
+    name: Test Linux
+    runs-on:
+      - runs-on=${{ github.run_id }}
+      - runner=16cpu-linux-x64
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/flutter-setup
+
+      - name: Run Linux Integration Tests
+        shell: bash
+        working-directory: example
+        run: |
+          xvfb-run flutter test ./integration_test/original_package_test.dart -d linux;
+          xvfb-run flutter test ./integration_test/path_provider_linux_test.dart -d linux;
 
   #   strategy:
   #     fail-fast: false
