@@ -32,10 +32,10 @@ jobs:
 
   test_linux:
     name: Test Linux
-    runs-on:
-      - runs-on=${{ github.run_id }}
-      - runner=16cpu-linux-x64
+    runs-on: ubuntu-latest
     steps:
+      - name: Setup RunsOn Cache
+        uses: runs-on/action@v1
       - name: Clone repository
         uses: actions/checkout@v4
 
