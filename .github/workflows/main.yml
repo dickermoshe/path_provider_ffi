@@ -12,6 +12,10 @@ on:
       - "docs/**"
       - "*.md"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test_windows:
     name: Test Windows
