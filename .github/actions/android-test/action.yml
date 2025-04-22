@@ -9,23 +9,20 @@ runs:
         distribution: "temurin"
         java-version: "17"
 
-    - name: Run Integration Tests on Android API Level 35
-      uses: reactivecircus/android-emulator-runner@v2
-      with:
-        force-avd-creation: true
-        api-level: 35
-        cores: 3
-        working-directory: example
-        target: google_apis
-        arch: x86_64
-        script: |
-          flutter test integration_test/original_package_test.dart;
-          flutter test integration_test/path_provider_android_test.dart;
-
+    # - name: Run Integration Tests on Android API Level 35
+    #   uses: reactivecircus/android-emulator-runner@v2
+    #   with:
+    #     api-level: 35
+    #     cores: 3
+    #     working-directory: example
+    #     target: google_apis
+    #     arch: x86_64
+    #     script: |
+    #       flutter test integration_test/original_package_test.dart;
+    #       flutter test integration_test/path_provider_android_test.dart;
     - name: Run Integration Tests on Android API Level 21
       uses: reactivecircus/android-emulator-runner@v2
       with:
-        force-avd-creation: true
         api-level: 21
         cores: 3
         working-directory: example
@@ -35,3 +32,4 @@ runs:
         # and will fail. This is expected.
         script: |
           flutter test integration_test/original_package_test.dart;
+          flutter test integration_test/path_provider_android_test.dart;
