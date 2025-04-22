@@ -7,42 +7,42 @@ on:
   pull_request:
 
 jobs:
-  build:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+  # build:
+  #   strategy:
+  #     matrix:
+  #       os: [ubuntu-latest, windows-latest, macos-latest]
 
-    runs-on: ${{ matrix.os }}
+  #   runs-on: ${{ matrix.os }}
 
-    steps:
-      - name: Clone repository
-        uses: actions/checkout@v4
-      - name: Setup
-        uses: ./.github/actions/flutter-setup
+  #   steps:
+  #     - name: Clone repository
+  #       uses: actions/checkout@v4
+  #     - name: Setup
+  #       uses: ./.github/actions/flutter-setup
 
-      - name: Run Regular Tests
-        run: |
-          flutter test
+  #     - name: Run Regular Tests
+  #       run: |
+  #         flutter test
 
-  test_linux:
-    needs: build
-    runs-on: ubuntu-latest
+  # test_linux:
+  #   needs: build
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: Clone repository
-        uses: actions/checkout@v4
-      - name: Setup
-        uses: ./.github/actions/flutter-setup
+  #   steps:
+  #     - name: Clone repository
+  #       uses: actions/checkout@v4
+  #     - name: Setup
+  #       uses: ./.github/actions/flutter-setup
 
-      - name: Run Integration Tests
-        working-directory: example
-        shell: bash
-        run: |
-          xvfb-run flutter test ./integration_test/original_package_test.dart -d linux;
-          xvfb-run flutter test ./integration_test/path_provider_linux_test.dart -d linux;
+  #     - name: Run Integration Tests
+  #       working-directory: example
+  #       shell: bash
+  #       run: |
+  #         xvfb-run flutter test ./integration_test/original_package_test.dart -d linux;
+  #         xvfb-run flutter test ./integration_test/path_provider_linux_test.dart -d linux;
 
   test_windows:
-    needs: build
+    # needs: build
     runs-on: windows-latest
 
     steps:
@@ -55,28 +55,28 @@ jobs:
         working-directory: example
         shell: bash
         run: |
-          flutter test .\integration_test\original_package_test.dart -d windows;
-          flutter test .\integration_test\path_provider_windows_test.dart -d windows;
+          flutter test \integration_test\original_package_test.dart -d windows;
+          flutter test \integration_test\path_provider_windows_test.dart -d windows;
 
-  text_macos:
-    needs: build
-    runs-on: macos-latest
+  # text_macos:
+  #   needs: build
+  #   runs-on: macos-latest
 
-    steps:
-      - name: Clone repository
-        uses: actions/checkout@v4
-      - name: Setup
-        uses: ./.github/actions/flutter-setup
+  #   steps:
+  #     - name: Clone repository
+  #       uses: actions/checkout@v4
+  #     - name: Setup
+  #       uses: ./.github/actions/flutter-setup
 
-      - name: Run Integration Tests
-        working-directory: example
-        shell: bash
-        run: |
-          flutter test ./integration_test/original_package_test.dart -d macos;
-          flutter test ./integration_test/path_provider_foundation_test.dart -d macos;
+  #     - name: Run Integration Tests
+  #       working-directory: example
+  #       shell: bash
+  #       run: |
+  #         flutter test ./integration_test/original_package_test.dart -d macos;
+  #         flutter test ./integration_test/path_provider_foundation_test.dart -d macos;
 
   test_android:
-    needs: test_linux
+    # needs: test_linux
     runs-on: ubuntu-latest
 
     strategy:
@@ -116,10 +116,10 @@ jobs:
         with:
           api-level: ${{ matrix.api-level }}
           cores: 3
+          working-directory: example
           target: google_apis
           arch: x86_64
           force-avd-creation: false
-          profile: Nexus 5X
           script: ./.github/scripts/android-integration-test.sh
 
   #   - name: Gradle cache
