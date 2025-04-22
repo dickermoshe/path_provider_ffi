@@ -1,10 +1,5 @@
 name: "IOS Test"
 description: "Sets up Flutter and installs dependencies."
-inputs:
-  api-level:
-    description: "Android API level to use for testing."
-    required: true
-
 runs:
   using: "composite"
   steps:
@@ -34,7 +29,7 @@ runs:
         emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
         script: echo "Generated AVD snapshot for caching."
 
-    - name: Run Integration Tests
+    - name: Run Integration Tests on Android API Level 21
       uses: reactivecircus/android-emulator-runner@v2
       with:
         api-level: 21
@@ -49,7 +44,7 @@ runs:
           flutter test integration_test/original_package_test.dart;
           flutter test integration_test/path_provider_android_test.dart;
 
-    - name: Run Integration Tests
+    - name: Run Integration Tests on Android API Level 35
       uses: reactivecircus/android-emulator-runner@v2
       with:
         api-level: 35
