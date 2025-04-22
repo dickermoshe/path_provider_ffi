@@ -6,7 +6,7 @@ import 'dart:io';
 
 import 'package:path_provider_ffi/src/platforms/foundation/path_provider_foundation.dart';
 import 'package:path_provider_ffi/src/platforms/android/path_provider_android.dart';
-
+import 'package:path_provider_ffi/src/platforms/linux/path_provider_linux.dart';
 import 'package:path_provider_ffi/src/platforms/windows/path_provider_windows.dart';
 
 /// The interface that implementations of path_provider must implement.
@@ -70,6 +70,8 @@ abstract class PathProvider {
           ? PathProviderWindows()
           : Platform.isAndroid
           ? PathProviderAndroid()
+          : Platform.isLinux
+          ? PathProviderLinux()
           : throw UnsupportedError('Unsupported platform');
 }
 
