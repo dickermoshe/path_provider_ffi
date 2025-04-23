@@ -11,8 +11,14 @@ runs:
         wait_for_boot: true
 
     - name: Run Integration Tests
-      working-directory: example
-      shell: bash
-      run: |
-        flutter test ./integration_test/original_package_test.dart -d ${{ steps.simulator.outputs.udid }};
-        flutter test ./integration_test/path_provider_foundation_test.dart -d ${{ steps.simulator.outputs.udid }};
+      uses: nick-fields/retry@v3
+      with:
+        retry_wait_seconds: 15
+        timeout_seconds: 600
+        max_attempts: 4
+        retry_on: timeout
+        working-directory: example
+        shell: bash
+        command: |
+          flutter test ./integration_test/original_package_test.dart -d ${{ steps.simulator.outputs.udid }};
+          flutter test ./integration_test/path_provider_foundation_test.dart -d ${{ steps.simulator.outputs.udid }};
