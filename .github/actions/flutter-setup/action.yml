@@ -28,6 +28,11 @@ runs:
       shell: bash
       run: flutter pub get
 
+    - name: Install Dependencies
+      working-directory: example
+      shell: bash
+      run: flutter pub get
+
     - name: Print Device Info
       shell: bash
       run: flutter devices
