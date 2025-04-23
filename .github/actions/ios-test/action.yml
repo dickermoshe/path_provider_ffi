@@ -17,8 +17,8 @@ runs:
         timeout_seconds: 600
         max_attempts: 4
         retry_on: timeout
-        working-directory: example
         shell: bash
         command: |
+          cd example;
           flutter test ./integration_test/original_package_test.dart -d ${{ steps.simulator.outputs.udid }};
           flutter test ./integration_test/path_provider_foundation_test.dart -d ${{ steps.simulator.outputs.udid }};
