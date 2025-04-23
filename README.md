@@ -13,6 +13,11 @@ Not all methods are supported on all platforms.
 | ----------- | ------- | ----- | ----- | ------ | ----------- |
 | **Support** | SDK 21+ | 12.0+ | Any   | 10.14+ | Windows 10+ |
 
+## Disclaimer
+
+This package depends on many experimental packages provided by the [Dart Labs Team](https://pub.dev/publishers/labs.dart.dev/packages). The `objective_c` package is used to interact with Objective-C APIs on iOS and macOS. `ffigen` and `jnigen` are also experimental packages, however these are only used to generate the bindings for the native libraries. 
+
+This package contains all the tests from the original `path_provider` plugin and is also tested against the original plugin to ensure that the results are the same.
 
 ## Example
 <?code-excerpt "readme_excerpts.dart (Example)"?>
