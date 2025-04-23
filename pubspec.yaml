@@ -1,6 +1,6 @@
 name: path_provider_ffi
 description: "A Flutter plugin for getting common filesystem paths synchronously using FFI"
-version: 2.1.5-dev1
+version: 2.1.5-dev2
 homepage: https://github.com/dickermoshe/path_provider_ffi
 
 environment:
