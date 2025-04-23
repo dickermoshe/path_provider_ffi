@@ -6,8 +6,7 @@ library;
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path_provider_android/path_provider_android.dart';
+import 'package:path_provider_ffi/path_provider_ffi.dart';
 
 void main() {
   if (!Platform.isAndroid) {
@@ -16,31 +15,31 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('getTemporaryDirectory', (WidgetTester tester) async {
-    final provider = PathProviderAndroid();
-    final String? result = await provider.getTemporaryPath();
+    final PathProvider provider = PathProvider.instance;
+    final String? result = provider.getTemporaryPath();
     _verifySampleFile(result, 'temporaryDirectory');
   });
 
   testWidgets('getApplicationDocumentsDirectory', (WidgetTester tester) async {
-    final provider = PathProviderAndroid();
-    final String? result = await provider.getApplicationDocumentsPath();
+    final PathProvider provider = PathProvider.instance;
+    final String? result = provider.getApplicationDocumentsPath();
     _verifySampleFile(result, 'applicationDocuments');
   });
 
   testWidgets('getApplicationSupportDirectory', (WidgetTester tester) async {
-    final provider = PathProviderAndroid();
-    final String? result = await provider.getApplicationSupportPath();
+    final PathProvider provider = PathProvider.instance;
+    final String? result = provider.getApplicationSupportPath();
     _verifySampleFile(result, 'applicationSupport');
   });
 
   testWidgets('getApplicationCacheDirectory', (WidgetTester tester) async {
-    final provider = PathProviderAndroid();
-    final String? result = await provider.getApplicationCachePath();
+    final PathProvider provider = PathProvider.instance;
+    final String? result = provider.getApplicationCachePath();
     _verifySampleFile(result, 'applicationCache');
   });
 
   testWidgets('getLibraryDirectory', (WidgetTester tester) async {
-    final provider = PathProviderAndroid();
+    final PathProvider provider = PathProvider.instance;
     expect(
       () => provider.getLibraryPath(),
       throwsA(isInstanceOf<UnsupportedError>()),
@@ -48,14 +47,14 @@ void main() {
   });
 
   testWidgets('getExternalStorageDirectory', (WidgetTester tester) async {
-    final provider = PathProviderAndroid();
-    final String? result = await provider.getExternalStoragePath();
+    final PathProvider provider = PathProvider.instance;
+    final String? result = provider.getExternalStoragePath();
     _verifySampleFile(result, 'externalStorage');
   });
 
   testWidgets('getExternalCacheDirectories', (WidgetTester tester) async {
-    final provider = PathProviderAndroid();
-    final List<String>? directories = await provider.getExternalCachePaths();
+    final PathProvider provider = PathProvider.instance;
+    final List<String>? directories = provider.getExternalCachePaths();
     expect(directories, isNotNull);
     for (final String result in directories!) {
       _verifySampleFile(result, 'externalCache');
@@ -77,9 +76,9 @@ void main() {
     testWidgets('getExternalStorageDirectories (type: $type)', (
       WidgetTester tester,
     ) async {
-      final provider = PathProviderAndroid();
+      final PathProvider provider = PathProvider.instance;
 
-      final List<String>? directories = await provider.getExternalStoragePaths(
+      final List<String>? directories = provider.getExternalStoragePaths(
         type: type,
       );
       expect(directories, isNotNull);
