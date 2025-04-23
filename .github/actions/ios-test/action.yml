@@ -17,5 +17,5 @@ runs:
       working-directory: example
       shell: bash
       run: |
-        flutter test ./integration_test/original_package_test.dart -d ${{ steps.simulator.outputs.udid }};
-        flutter test ./integration_test/path_provider_foundation_test.dart -d ${{ steps.simulator.outputs.udid }};
+        flutter test ./integration_test/original_package_test.dart;
+        flutter test ./integration_test/path_provider_foundation_test.dart;
