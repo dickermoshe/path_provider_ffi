@@ -1,9 +1,9 @@
 # path_provider_ffi
 <?code-excerpt path-base="example/lib"?>
 
-[![pub package](https://img.shields.io/pub/v/path_provider_ffi.svg)](https://pub.dev/packages/path_provider_ffi)
+[![pub package](https://img.shields.io/pub/v/path_provider_ffi.svg)](https://pub.dev/packages/path_provider_ffi) [![CI - Internal PRs Auto-Run](https://github.com/fflitter/path_provider_ffi/actions/workflows/main.yml/badge.svg)](https://github.com/fflitter/path_provider_ffi/actions/workflows/main.yml)
 
-A port the the `path_provider` Flutter plugin for finding commonly used locations on the filesystem.
+A port the the [`path_provider`](https://pub.dev/packages/path_provider) Flutter plugin for finding commonly used locations on the filesystem.
 Supports Android, iOS, Linux, macOS and Windows. This port uses FFI to access the native APIs instead of the platform channels used by the original plugin. 
 
 
