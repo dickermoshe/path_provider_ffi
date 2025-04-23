@@ -3,12 +3,15 @@ description: "Sets up Flutter and installs dependencies."
 runs:
   using: "composite"
   steps:
-    - name: Install Simulator
-      id: simulator
-      uses: futureware-tech/simulator-action@v4
-      with:
-        model: "iPhone 16"
-        wait_for_boot: true
+    - name: List simulators
+      shell: bash
+      run: "xcrun xctrace list devices"
+
+    - name: Start simulator
+      shell: bash
+      run: |
+        IPHONE=$(xcrun xctrace list devices  2>&1 | grep -m 1 "iPhone" | awk -F'[()]' '{print $4}')
+        xcrun simctl boot $IPHONE
 
     - name: Run Integration Tests
       working-directory: example
